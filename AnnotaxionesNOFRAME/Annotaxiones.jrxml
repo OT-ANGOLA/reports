@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-24T08:03:47 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Annotaxiones" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="Bundle" uuid="985fe8fc-59be-4ab1-adfa-106164917efc">
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Workflow/Annotaxiones"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="lang" class="java.lang.String">
+		<parameterDescription><![CDATA[Language code]]></parameterDescription>
+		<defaultValueExpression><![CDATA["en-us"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.String">
+		<parameterDescription><![CDATA[Identificador]]></parameterDescription>
+	</parameter>
+	<parameter name="imageUrl" class="java.lang.String">
+		<parameterDescription><![CDATA[URL of the service to generate map image]]></parameterDescription>
+	</parameter>
+	<parameter name="communityName" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Test"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select c.*, 
+p.*,
+ pc.name as claimant_name,
+ (select coalesce(vl, '') from system.setting where name = 'issuing-authority') as issuing_authority,
+ (select coalesce(vl, '') from system.setting where name = 'municipe-authority') as municipality,
+   (select coalesce(vl, '') from system.setting where name = 'province-authority') as province,
+   (select coalesce(vl, '') from system.setting where name = 'governador') as governador,
+  "terra-commune".display_value AS comuneterra, 
+  "terra-municipality".display_value AS municipioterra, 
+  "terra-province".display_value As provinciaterra,
+	pc.name|| ' ' || pc.last_name as representative, 
+	pc.birth_country_code, pc.marital_status_code, 
+	pc.birth_commune_code, 
+	cc.comment,
+	round(cast(c.claim_area as decimal(12,0))/1000,2) as claim_areahec  
+  
+FROM opentenure.claim c 
+inner join address.commune "terra-commune" on c.commune_code = "terra-commune".code 
+  inner join address.municipality "terra-municipality" on "terra-commune".municipality_code = "terra-municipality".code 
+  inner join address.province "terra-province" on "terra-municipality".province_code = "terra-province".code
+  
+inner join (opentenure.claim_share sh 
+LEFT JOIN (opentenure.party_for_claim_share psh 
+   INNER JOIN 
+   opentenure.party p
+   ON psh.party_id = p.id) 
+ ON sh.id = psh.claim_share_id)
+ on c.id = sh.claim_id
+ inner join opentenure.party pc on c.claimant_id = pc.id
+ left join opentenure.claim_comment cc on c.id = cc.claim_id
+ where c.id = $P{id}]]>
+	</queryString>
+	<field name="id" class="java.lang.String"/>
+	<field name="nr" class="java.lang.String"/>
+	<field name="lodgement_date" class="java.sql.Timestamp"/>
+	<field name="challenge_expiry_date" class="java.sql.Timestamp"/>
+	<field name="decision_date" class="java.sql.Timestamp"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="challenged_claim_id" class="java.lang.String"/>
+	<field name="claimant_id" class="java.lang.String"/>
+	<field name="mapped_geometry" class="java.lang.Object"/>
+	<field name="gps_geometry" class="java.lang.Object"/>
+	<field name="status_code" class="java.lang.String"/>
+	<field name="status_name" class="java.lang.String"/>
+	<field name="recorder_name" class="java.lang.String"/>
+	<field name="full_recorder_name" class="java.lang.String"/>
+	<field name="type_code" class="java.lang.String"/>
+	<field name="type_name" class="java.lang.String"/>
+	<field name="start_date" class="java.sql.Date"/>
+	<field name="land_use_code" class="java.lang.String"/>
+	<field name="landuse_name" class="java.lang.String"/>
+	<field name="notes" class="java.lang.String"/>
+	<field name="north_adjacency" class="java.lang.String"/>
+	<field name="south_adjacency" class="java.lang.String"/>
+	<field name="east_adjacency" class="java.lang.String"/>
+	<field name="west_adjacency" class="java.lang.String"/>
+	<field name="assignee_name" class="java.lang.String"/>
+	<field name="rejection_reason_code" class="java.lang.String"/>
+	<field name="claim_areahec" class="java.lang.Float"/>
+	<field name="neighborhood" class="java.lang.String"/>
+	<field name="issuing_authority" class="java.lang.String"/>
+	<field name="municipality" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="plot_number" class="java.lang.String"/>
+	<field name="representative" class="java.lang.String"/>
+	<field name="marital_status" class="java.lang.String"/>
+	<field name="naturalitade" class="java.lang.String"/>
+	<field name="nacionalidade" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="last_name" class="java.lang.String"/>
+	<field name="id_number" class="java.lang.String"/>
+	<field name="municipioterra" class="java.lang.String"/>
+	<field name="provinciaterra" class="java.lang.String"/>
+	<field name="comuneterra" class="java.lang.String"/>
+	<field name="comment" class="java.lang.String"/>
+	<field name="governador" class="java.lang.String"/>
+	<detail>
+		<band height="802" splitType="Stretch">
+			<textField>
+				<reportElement x="40" y="100" width="460" height="130" uuid="205c54c4-9f22-4599-a42c-b05c32443c1f"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[UPPER($F{governador})+", GOVERNADOR DA PROVÍNCIA DO "+UPPER($F{province})+" , FAÇO SABER QUE POR MEU DESPACHO DE 17 DE NOVEMBRO DE 2013 GAB/GPB 3305/2013, O PROCESSO "+UPPER($F{nr}+"/"+$F{province}+"/"+YEAR(NOW()))+" ARQUIVADO NO DEPARTAMENTO DE CADASTRO DA SEDE NACIONAL DO IGCA E NO SEU DEPARTAMENTO PROVINCIAL/"+UPPER($F{province})+", DE ACORDO COM A LEI Nº 9/04 DE 9 DE NOVEMBRO E SEU REGULAMENTO GERAL, NOS TERMOS DO ARTIGO 4º E ARTIGO 9º DA MESMA LEI, CONCEDE POR DOMÍNIO ÚTIL CONSUETUDINÁRIO, A COMUNIDADE "+UPPER($F{name}+" "+($F{last_name} == null ? "" : " " + $F{last_name}))+" , LOCALIZADA NO MUNICÍPIO DE "+UPPER($F{municipioterra})+", CENTRO ADMINISTRATIVO DE "+UPPER($F{comuneterra})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="40" y="227" width="460" height="30" uuid="864c63ba-bcb9-4bb7-a65d-6a4ded2d8e85">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E REPRESENTADA PELOS SENHORES  "+UPPER(($F{comment} == null ? "" : " " + $F{comment}))+" , DESCRITO NA II PARTE DESTE TÍTULO"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="40" y="257" width="110" height="19" uuid="1fa932ef-f708-47d3-8f3f-ce1ad506d755"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COM A ÁREA DE "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="40" y="309" width="460" height="59" uuid="17402e18-432f-405f-abbd-8f3d7f600f7e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NOS TERMOS DAS DISPOSIÇÕES CONSTANTES DA SUPRACITADA LEI E DO SEU REGULAMENTO GERAL, MANDEI PASSAR O PRESENTE TÍTULO QUE VAI POR MIM ASSINADO E AUTENTICADO, BEM COMO DOS REPRESENTANTES DA COMUNIDADE."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="379" width="460" height="60" uuid="1d874eba-2846-40bc-80ed-1a4318d302dc"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[ESTÃO ISENTOS DE PAGAMENTO DE FOROS OU DE PRESTAÇÕES DE QUALQUER ESPÉCIE, SEGUNDO O ARTIGO Nº 37º NO SEU PONTO 6 DA LEI Nº 9/04 DE 9 DE NOVEMBRO, ASSIM COMO O ARTIGO 47º PONTO 1 ALINEAS a) e b) RELATIVO AO DOMÍNIO ÚTIL CONSUETUDINÁRIO PREVISTO NO SEU REGULAMENTO GERAL.
+
+ESTÃO ISENTOS DE PAGAMENTO DE FOROS OU DE PRESTAÇÕES DE QUALQUER ESPÉCIE, SEGUNDO O ARTIGO Nº 37º NO SEU PONTO 6 DA LEI Nº 9/04 DE 9 DE NOVEMBRO, ASSIM COMO O ARTIGO 47º PONTO 1 ALINEAS a) e b) RELATIVO AO DOMÍNIO ÚTIL CONSUETUDINÁRIO PREVISTO NO SEU REGULAMENTO GERAL.]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="40" y="449" width="460" height="59" uuid="8383ef5d-7cb7-40c3-8164-3635b17a5d1e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NOS TERMOS DAS DISPOSIÇÕES CONSTANTES DA SUPRACITADA LEI E DO SEU REGULAMENTO GERAL, MANDEI PASSAR O PRESENTE TÍTULO QUE VAI POR MIM ASSINADO E AUTENTICADO, BEM COMO DOS REPRESENTANTES DA COMUNIDADE."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" positionType="Float" x="211" y="256" width="180" height="20" uuid="aab078be-0b87-4878-8999-2d0c4338357c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[UPPER("hectares do superficie")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)">
+				<reportElement positionType="Float" x="144" y="256" width="76" height="20" uuid="e6e7ea38-f994-4112-bd2a-b1c610b94c92">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{claim_areahec}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="42" y="279" width="458" height="30" uuid="6e766960-9744-406b-805f-d0903d4ff153"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["E DEVIDAMENTE CADASTRADA COM O Nº _________________, DA FOLHA Nº ____________________ DA CARTA DE ANGOLA À ESCALA DE "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="40" y="522" width="460" height="19" uuid="1b2abd65-07fc-4f9b-a27e-495199aa8725">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GOVERNO PROVINCIAL DO "+UPPER($F{province})+", "+UPPER($F{municipioterra})+" Aos "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="49" y="544" width="437" height="18" uuid="6e0fecc9-f928-4381-90c0-4ccf27994f18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["O GOVERNADOR PROVINCIAL"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="166" y="582" width="202" height="1" uuid="41c707cd-de1f-4400-867b-d27a1cd4079c"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="166" y="586" width="202" height="15" isRemoveLineWhenBlank="true" uuid="e626c414-6e34-4927-a52c-e6b7aba42011"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{governador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="49" y="611" width="437" height="18" uuid="2adab84c-15cb-4511-b944-438e22da0a13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OS REPRESENTANTES DA COMUNIDADE "+UPPER($F{name}+" "+($F{last_name} == null ? "" : " " + $F{last_name}))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="130" y="697" width="280" height="1" uuid="b219cbb3-73e1-4904-81de-0aa5df40a047"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="130" y="650" width="280" height="1" uuid="b30aa612-4134-4db6-9299-e540ef2242b5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="130" y="718" width="280" height="1" uuid="f179ded0-05a4-40d2-ac71-8fa3c0f768a9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="130" y="671" width="280" height="1" uuid="e4fbc225-1d52-4b9b-b5ba-ad74b82c7d63">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="130" y="742" width="280" height="1" uuid="c08921bf-79c4-425f-84e7-c4777aa97d57">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="130" y="765" width="280" height="1" uuid="13b792b5-2051-42da-88ed-990beda3a61d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="194" y="25" width="147" height="30" uuid="390e35eb-cfdb-4d6e-a6e8-dfa1a8367b68"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[I PARTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="96" y="57" width="342" height="30" uuid="afd937bf-4342-43bf-a173-2d2f813ef685"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[UPPER("Anotações Complementares")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

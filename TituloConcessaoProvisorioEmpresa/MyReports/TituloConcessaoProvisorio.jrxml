@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-08T17:36:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Titulo Concessao Provisorio" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="Bundle" uuid="985fe8fc-59be-4ab1-adfa-106164917efc">
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Workflow/TituloConcessaoProvisorio"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="ireport.jasperserver.report.resource" value="/Workflow/TituloConcessaoProvisorio_files/main_jrxml"/>
+	<parameter name="lang" class="java.lang.String">
+		<parameterDescription><![CDATA[Language code]]></parameterDescription>
+		<defaultValueExpression><![CDATA["en-us"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.String">
+		<parameterDescription><![CDATA[Identificador]]></parameterDescription>
+	</parameter>
+	<parameter name="imageUrl" class="java.lang.String">
+		<parameterDescription><![CDATA[URL of the service to generate map image]]></parameterDescription>
+	</parameter>
+	<parameter name="communityName" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Test"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT c.id,
+	c.nr,
+	c.lodgement_date,
+	c.challenge_expiry_date,
+	c.decision_date,
+	c.description,
+	c.challenged_claim_id,
+	c.claimant_id,
+	c.mapped_geometry,
+	c.gps_geometry,
+	c.status_code,
+	get_translation(s.display_value, $P{lang}) as status_name,
+	c.recorder_name,
+	(select coalesce(first_name, '') || ' ' || coalesce(last_name, '') from system.appuser where username = c.recorder_name limit 1) as full_recorder_name,
+	c.type_code,
+	get_translation(t.display_value, $P{lang}) as type_name,
+	c.start_date,
+	c.land_use_code,
+	get_translation(lt.display_value, $P{lang}) as landuse_name,
+	c.notes,
+	c.north_adjacency,
+	c.south_adjacency,
+	c.east_adjacency,
+	c.west_adjacency,
+	c.assignee_name,
+	c.rejection_reason_code,
+	c.claim_area,
+	c.neighborhood,
+	(select coalesce(vl, '') from system.setting where name = 'issuing-authority') as issuing_authority,
+	mu.display_value municipality,
+	p.display_value province,
+	c.plot_number
+	
+FROM ((opentenure.claim c LEFT JOIN administrative.rrr_type t ON c.type_code = t.code)
+  LEFT JOIN cadastre.land_use_type lt ON c.land_use_code = lt.code)
+    LEFT JOIN opentenure.claim_status s ON c.status_code = s.code
+     LEFT JOIN address.commune com ON com.code = c.commune_code
+    LEFT JOIN address.municipality mu ON com.municipality_code = mu.code
+   LEFT JOIN address.province p ON mu.province_code = p.code
+
+WHERE c.id = $P{id}]]>
+	</queryString>
+	<field name="id" class="java.lang.String"/>
+	<field name="nr" class="java.lang.String"/>
+	<field name="lodgement_date" class="java.sql.Timestamp"/>
+	<field name="challenge_expiry_date" class="java.sql.Timestamp"/>
+	<field name="decision_date" class="java.sql.Timestamp"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="challenged_claim_id" class="java.lang.String"/>
+	<field name="claimant_id" class="java.lang.String"/>
+	<field name="mapped_geometry" class="java.lang.Object"/>
+	<field name="gps_geometry" class="java.lang.Object"/>
+	<field name="status_code" class="java.lang.String"/>
+	<field name="status_name" class="java.lang.String"/>
+	<field name="recorder_name" class="java.lang.String"/>
+	<field name="full_recorder_name" class="java.lang.String"/>
+	<field name="type_code" class="java.lang.String"/>
+	<field name="type_name" class="java.lang.String"/>
+	<field name="start_date" class="java.sql.Date"/>
+	<field name="land_use_code" class="java.lang.String"/>
+	<field name="landuse_name" class="java.lang.String"/>
+	<field name="notes" class="java.lang.String"/>
+	<field name="north_adjacency" class="java.lang.String"/>
+	<field name="south_adjacency" class="java.lang.String"/>
+	<field name="east_adjacency" class="java.lang.String"/>
+	<field name="west_adjacency" class="java.lang.String"/>
+	<field name="assignee_name" class="java.lang.String"/>
+	<field name="rejection_reason_code" class="java.lang.String"/>
+	<field name="claim_area" class="java.lang.Long"/>
+	<field name="neighborhood" class="java.lang.String"/>
+	<field name="issuing_authority" class="java.lang.String"/>
+	<field name="municipality" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="plot_number" class="java.lang.String"/>
+	<background>
+		<band height="445" splitType="Stretch">
+			<printWhenExpression><![CDATA[!$F{status_code}.equalsIgnoreCase("moderated")]]></printWhenExpression>
+			<textField>
+				<reportElement x="3" y="167" width="528" height="111" forecolor="#D4D4D4" uuid="0930037c-273f-4a27-9a57-56ed66ba36a3">
+					<printWhenExpression><![CDATA[!$F{status_code}.equalsIgnoreCase("moderated")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font size="55" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{not_approved}]]></textFieldExpression>
+			</textField>
+		</band>
+	</background>
+	<title>
+		<band height="150" splitType="Stretch">
+			<image scaleImage="RetainShape" hAlign="Center">
+				<reportElement x="207" y="0" width="93" height="67" uuid="0b1fd974-a2a0-4f90-8136-e1ed17cb315f">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA["logo.png"]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" hAlign="Center">
+				<reportElement x="74" y="104" width="387" height="45" uuid="def282da-7553-4417-8e43-8bc651e2aaa3">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA["TiToloProvisorioAngola.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="65" y="70" width="406" height="21" uuid="bef41d1f-d5f4-453c-9d8d-81a9af4b24bb"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPÚBLICA DE ANGOLA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="80" width="406" height="20" uuid="efd04535-8abd-49dc-a089-a0f69cb6381e"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GOVERNO PROVINCIAL DO " +UPPER($F{province})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="91" width="401" height="30" uuid="781c7ae9-14e0-46b3-9965-64a0d8098871"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ADMINISTRAÇÃO MUNICIPAL DO " +UPPER($F{municipality})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="507" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement positionType="Float" x="0" y="0" width="535" height="414" isRemoveLineWhenBlank="true" uuid="55bb1276-76a8-40fb-b8f7-27d321b91997">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="ShowOutOfBoundContent" value="false"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="41" width="535" height="17" uuid="f2befa5e-4d7b-43ad-842e-59b18d073207">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{landuse_name})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="535" height="20" uuid="65aa853a-8eb2-448c-a9c5-5880f761582a"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[01 – Característica do Título]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="21" width="535" height="20" uuid="61c3746c-23a8-4b2f-ac8f-53e533d82a73"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Espécie:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="220" y="77" width="125" height="17" uuid="6f8d9d3c-a437-4bd4-a468-f73fc5a03874">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{municipality}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="95" width="535" height="20" uuid="ad545ecc-c727-471f-a2d5-bf397730c757"/>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[02 – Autoridade Concedente:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="0" y="77" width="115" height="17" uuid="311b0f35-78d6-4d58-8958-ceafcf4cd389">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{nr})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="116" width="535" height="20" uuid="27e0209a-7551-450a-8796-3cd048589d5f"/>
+					<textElement>
+						<font fontName="SansSerif" size="10" isBold="false"/>
+						<paragraph lineSpacingSize="1.0" leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Administração Municipal do Kuito, neste acto representado pelo Sr.º  " +$F{issuing_authority}+ "   na qualidade de Administrador Municipal"]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement positionType="Float" x="0" y="137" width="535" height="34" uuid="4fb7a9bc-c9bf-4835-9dfd-9cbc9de79fd3"/>
+					<subreportParameter name="claim_id">
+						<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["Shares.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="174" width="535" height="20" uuid="a4444cd6-1764-42ea-b4e9-2f2392e86f54"/>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[04 – Fundamentação Legal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="193" width="535" height="39" uuid="51c6e4b8-15e2-4d83-8627-63f99d1bfa53"/>
+					<textElement>
+						<font fontName="SansSerif" size="10" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Ref: al. g) do nº 2 do  art. 45.º da Lei n.º 17/10 de 29 de Julho; art. 58.º e 59.º da Lei n.º 09/04 de 9 de Novembro conjugado com o art. 137.º do Dec. N.º 58/07 de 13 de Julho]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="232" width="535" height="20" uuid="cc23c748-0343-4976-9d89-44c4c0aaf3c9"/>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[05 – Características do Terreno]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="274" y="268" width="261" height="17" uuid="a173c5ed-1f4b-4458-87db-23e16526c7fc"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{plot_number})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="0" y="270" width="258" height="17" isRemoveLineWhenBlank="true" uuid="7cb4b823-87db-4604-8e8c-7c494b4794c8"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{neighborhood})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="251" width="261" height="18" uuid="af65d016-026b-4d26-a8d7-13ef82b8a38c"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Identificação do Terreno: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="274" y="250" width="261" height="18" uuid="d99d27a1-56b7-408e-8c13-17b6d94ca55f"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[N.º de Lote:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="287" width="261" height="18" uuid="3ce42cec-60ff-4951-9b7a-c78f1b1ea902"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[Área por Extenso:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="274" y="306" width="81" height="17" uuid="12f8a6ec-7e27-42a9-8329-17cfb3a2a47d">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{claim_area}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="274" y="287" width="261" height="18" uuid="9947b544-cf4e-4d5c-8b5c-3a2e05905ec3">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Área (m²) ou (Hectares):]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="355" y="306" width="100" height="17" uuid="a32dd8ae-317e-4239-898e-2e6424ff4c2c">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[m²]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="306" width="258" height="17" isRemoveLineWhenBlank="true" uuid="2f52861f-725d-4a54-b5d0-0de9f4007633"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="58" width="117" height="18" uuid="abb26074-f4fd-44e9-9b4a-9cb8f6be8503">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[N.º do Título]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="220" y="58" width="125" height="18" uuid="0a3cf3e9-2866-4e59-b4a8-7db1599fffa9"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Local de Emissão]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="122" y="58" width="98" height="18" uuid="e74f64dc-df28-4991-8f34-bc34b32ae2b4"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="349" y="58" width="186" height="18" uuid="dab0da54-63b2-4181-b4ff-8a2edec79a53"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Processo Administrativo n.º]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="0" y="363" width="258" height="17" uuid="70a51754-6fbc-4438-beb4-65b6e96ff43f"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{north_adjacency})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="344" width="261" height="18" uuid="7a62126e-ca58-410c-bc18-60eb370ae1a3"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[A Norte:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="274" y="379" width="261" height="18" uuid="2c5310d2-a21a-4d05-996a-3a93920ff893"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A Oeste:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="379" width="261" height="18" uuid="b9ca44da-d0d9-4d98-b33b-848ff0974dbd">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[A Este:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="0" y="397" width="258" height="17" uuid="48957068-f4cc-4924-8af6-5838e6a7efac">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{east_adjacency})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="274" y="397" width="261" height="17" uuid="63d7e9ed-b339-49c9-bc01-8d0e9d71b24a"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{west_adjacency})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="324" width="535" height="20" uuid="3c21cb49-0eb3-4461-9859-885155f31e94"/>
+					<textElement>
+						<font fontName="SansSerif" size="12" isBold="true"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<text><![CDATA[06 - Confrontações constantes do croquis de localização]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="274" y="361" width="261" height="17" uuid="f0599eb6-31b1-4b42-9e27-b94d0e005895"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{south_adjacency})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="274" y="343" width="261" height="18" uuid="1bd3d1c9-d136-4a48-a417-3666d6572eef"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[A Sul:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="349" y="77" width="186" height="17" uuid="67cb504f-5119-432a-b33d-0fc22ae38199">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[T($F{nr})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="MMMM d, yyyy">
+					<reportElement positionType="Float" x="118" y="77" width="102" height="17" uuid="3f8a0381-67bf-42c2-a871-2ef09ce34a49"/>
+					<textElement>
+						<font fontName="SansSerif" size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{lodgement_date} == null ? "" : $F{lodgement_date})]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField>
+				<reportElement positionType="Float" x="0" y="414" width="535" height="35" uuid="f3cb026b-e5c4-4c2a-84da-95eb1b3f0453"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OBS: Este título de concessão de terreno provisório, serve de comprovativo para celebrar junto do Governo Provincial do "+$F{province}+", a Escritura Publica de Constituição de Direito de Superfície, no prazo de 60 dias"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="443" width="420" height="20" uuid="988c5c7c-db7d-4cfd-af83-0fb7f694ead7"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ADMINISTRAÇÃO MUNICIPAL DO "+UPPER( $F{municipality})+", AOS"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="220" y="465" width="269" height="20" uuid="4cafaa3a-43a5-47c4-968d-ea2f1b540078"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+					<paragraph rightIndent="25"/>
+				</textElement>
+				<text><![CDATA[O ADMINISTRADOR MUNICIPAL]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="150" y="487" width="362" height="20" uuid="1ff47490-585b-43cf-8425-49f1f5fad038"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Edwardian Script ITC" size="14" isBold="false" isItalic="true"/>
+					<paragraph rightIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Dr "+$F{issuing_authority}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" stretchType="ContainerBottom" x="3" y="5" width="530" height="1" forecolor="#9C0A08" backcolor="#964544" uuid="b6eeed48-babe-48ed-8568-29061c0fee68"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" stretchType="ContainerBottom" x="2" y="2" width="530" height="1" forecolor="#9C0A08" backcolor="#964544" uuid="36ac591d-dcee-488c-b34c-cb3ee9eaa915">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="FixRelativeToBottom" x="5" y="8" width="420" height="12" uuid="d13a69fb-7a35-4bc1-ab6c-99dbcb2da602"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipality}+": "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

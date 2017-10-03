@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-23T19:30:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ActaValidacao" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="Bundle" uuid="af269669-0174-4790-aa7a-78d78d182792">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="solaconnect"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Workflow/ActaValidacao"/>
+	<property name="ireport.jasperserver.report.resource" value="/Workflow/ActaValidacao_files/main_jrxml"/>
+	<parameter name="lang" class="java.lang.String">
+		<parameterDescription><![CDATA[Language code]]></parameterDescription>
+		<defaultValueExpression><![CDATA["en-us"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.String">
+		<parameterDescription><![CDATA[Claim id]]></parameterDescription>
+	</parameter>
+	<parameter name="imageUrl" class="java.lang.String">
+		<parameterDescription><![CDATA[URL of the service to generate map image]]></parameterDescription>
+	</parameter>
+	<parameter name="communityName" class="java.lang.String">
+		<parameterDescription><![CDATA[Community name]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Test"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select c.*, 
+p.*,
+ pc.name as claimant_name,
+ (select coalesce(vl, '') from system.setting where name = 'issuing-authority') as issuing_authority,
+ (select coalesce(vl, '') from system.setting where name = 'municipe-authority') as municipality,
+   (select coalesce(vl, '') from system.setting where name = 'province-authority') as province,
+  "terra-commune".display_value AS comuneterra, 
+  "terra-municipality".display_value AS municipioterra, 
+  "terra-province".display_value As provinciaterra,
+	pc.name|| ' ' || pc.last_name as representative, 
+	pc.birth_country_code, pc.marital_status_code, 
+	pc.birth_commune_code, 
+	cc.comment
+	--round(cast(c.claim_area as decimal(12,0))/1000,2) as claim_areahec  
+  
+FROM opentenure.claim c 
+inner join address.commune "terra-commune" on c.commune_code = "terra-commune".code 
+  inner join address.municipality "terra-municipality" on "terra-commune".municipality_code = "terra-municipality".code 
+  inner join address.province "terra-province" on "terra-municipality".province_code = "terra-province".code
+  
+inner join (opentenure.claim_share sh 
+LEFT JOIN (opentenure.party_for_claim_share psh 
+   INNER JOIN 
+   opentenure.party p
+   ON psh.party_id = p.id) 
+ ON sh.id = psh.claim_share_id)
+ on c.id = sh.claim_id
+ inner join opentenure.party pc on c.claimant_id = pc.id
+ left join opentenure.claim_comment cc on c.id = cc.claim_id
+ where c.id = $P{id}]]>
+	</queryString>
+	<field name="id" class="java.lang.String"/>
+	<field name="nr" class="java.lang.String"/>
+	<field name="lodgement_date" class="java.sql.Timestamp"/>
+	<field name="challenge_expiry_date" class="java.sql.Timestamp"/>
+	<field name="decision_date" class="java.sql.Timestamp"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="challenged_claim_id" class="java.lang.String"/>
+	<field name="claimant_id" class="java.lang.String"/>
+	<field name="mapped_geometry" class="java.lang.Object"/>
+	<field name="gps_geometry" class="java.lang.Object"/>
+	<field name="status_code" class="java.lang.String"/>
+	<field name="recorder_name" class="java.lang.String"/>
+	<field name="rowidentifier" class="java.lang.String"/>
+	<field name="rowversion" class="java.lang.Integer"/>
+	<field name="change_action" class="java.lang.String"/>
+	<field name="change_user" class="java.lang.String"/>
+	<field name="change_time" class="java.sql.Timestamp"/>
+	<field name="type_code" class="java.lang.String"/>
+	<field name="start_date" class="java.sql.Date"/>
+	<field name="land_use_code" class="java.lang.String"/>
+	<field name="notes" class="java.lang.String"/>
+	<field name="north_adjacency" class="java.lang.String"/>
+	<field name="south_adjacency" class="java.lang.String"/>
+	<field name="east_adjacency" class="java.lang.String"/>
+	<field name="west_adjacency" class="java.lang.String"/>
+	<field name="assignee_name" class="java.lang.String"/>
+	<field name="rejection_reason_code" class="java.lang.String"/>
+	<field name="claim_area" class="java.lang.Long"/>
+	<field name="issuance_date" class="java.sql.Timestamp"/>
+	<field name="termination_date" class="java.sql.Date"/>
+	<field name="termination_reason_code" class="java.lang.String"/>
+	<field name="create_transaction" class="java.lang.String"/>
+	<field name="terminate_transaction" class="java.lang.String"/>
+	<field name="block_number" class="java.lang.String"/>
+	<field name="has_constructions" class="java.lang.Boolean"/>
+	<field name="north_adjacency_type" class="java.lang.String"/>
+	<field name="construction_date" class="java.sql.Date"/>
+	<field name="south_adjacency_type" class="java.lang.String"/>
+	<field name="west_adjacency_type" class="java.lang.String"/>
+	<field name="east_adjacency_type" class="java.lang.String"/>
+	<field name="neighborhood" class="java.lang.String"/>
+	<field name="land_project_code" class="java.lang.String"/>
+	<field name="commune_code" class="java.lang.String"/>
+	<field name="plot_number" class="java.lang.String"/>
+	<field name="COLUMN_45" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="last_name" class="java.lang.String"/>
+	<field name="id_type_code" class="java.lang.String"/>
+	<field name="id_number" class="java.lang.String"/>
+	<field name="birth_date" class="java.sql.Date"/>
+	<field name="gender_code" class="java.lang.String"/>
+	<field name="mobile_phone" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="user_name" class="java.lang.String"/>
+	<field name="COLUMN_57" class="java.lang.String"/>
+	<field name="COLUMN_58" class="java.lang.Integer"/>
+	<field name="COLUMN_59" class="java.lang.String"/>
+	<field name="COLUMN_60" class="java.lang.String"/>
+	<field name="COLUMN_61" class="java.sql.Timestamp"/>
+	<field name="is_person" class="java.lang.Boolean"/>
+	<field name="other_name" class="java.lang.String"/>
+	<field name="id_issuance_date" class="java.sql.Date"/>
+	<field name="id_issuance_country" class="java.lang.String"/>
+	<field name="id_issuance_province" class="java.lang.String"/>
+	<field name="birth_country_code" class="java.lang.String"/>
+	<field name="birth_commune_code" class="java.lang.String"/>
+	<field name="residence_commune_code" class="java.lang.String"/>
+	<field name="father_name" class="java.lang.String"/>
+	<field name="mother_name" class="java.lang.String"/>
+	<field name="beneficiary_name" class="java.lang.String"/>
+	<field name="beneficiary_id_number" class="java.lang.String"/>
+	<field name="marital_status_code" class="java.lang.String"/>
+	<field name="id_issuance_municipality" class="java.lang.String"/>
+	<field name="id_issuance_commune" class="java.lang.String"/>
+	<field name="claimant_name" class="java.lang.String"/>
+	<field name="issuing_authority" class="java.lang.String"/>
+	<field name="municipality" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="representative" class="java.lang.String"/>
+	<field name="marital_status" class="java.lang.String"/>
+	<field name="naturalitade" class="java.lang.String"/>
+	<field name="nacionalidade" class="java.lang.String"/>
+	<field name="municipioterra" class="java.lang.String"/>
+	<field name="provinciaterra" class="java.lang.String"/>
+	<field name="comuneterra" class="java.lang.String"/>
+	<field name="comment" class="java.lang.String"/>
+	<title>
+		<band height="230" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement mode="Transparent" x="242" y="-13" width="50" height="50" uuid="a7168ddd-f07b-422a-8122-40d7816caa79"/>
+				<imageExpression><![CDATA["AngolaGvtLogo.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="10" y="126" width="520" height="1" uuid="c9cfcfa4-7614-4454-ac93-cc530fa93427"/>
+				<graphicElement>
+					<pen lineWidth="3.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="96" width="535" height="30" uuid="9379eee5-55a3-4ced-8715-f7cf97001d77"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cambria" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTA DE VALIDAÇÃO
+]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement x="10" y="47" width="520" height="43" uuid="abfbbad8-579e-411f-95fc-aff47074e382"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="Cambria" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["REPÚBLICA DE ANGOLA \n"+
+"GOVERNO DA PROVINCIA DO "+UPPER( $F{province})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="8" y="150" width="518" height="80" uuid="5b783f82-d6de-4f02-b4bf-aff0a4eae881"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Aos ......................... dias do mês de ......................... do ano ........................., foram validados o presente relatório e os limites da Comunidade Rural de " +$F{name}+" "+($F{last_name} == null ? "" : " " + $F{last_name})+", Comuna de "+$F{comuneterra}+", Município de "+$F{municipioterra}+", junto com a Comissão de Gestão da Comunidade, os Representantes das Comunidades vizinhas, e a equipa técnica de delimitação, cujos nomes constam a seguir com as respectivas assinaturas:. \n"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="558">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement mode="Transparent" x="0" y="3" width="535" height="252" uuid="58711a63-26bb-4813-8f82-31efa8419991"/>
+				<imageExpression><![CDATA["CommisaoGestacao.png"]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="254" width="535" height="288" uuid="7c826840-9b07-4a16-83a6-19a38d31b7a3"/>
+				<imageExpression><![CDATA["Representante.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="304" y="32" width="226" height="30" uuid="dc552876-d3ac-4311-a891-4f18047bcbaf"/>
+				<textElement markup="styled">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}+" "+($F{last_name} == null ? "" : " " + $F{last_name})]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="696">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement mode="Transparent" x="0" y="9" width="535" height="288" uuid="2d868688-fa55-44c8-998b-53f4865e7d26"/>
+				<imageExpression><![CDATA["Equipa.png"]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="323" width="535" height="288" uuid="c9a0ba8b-a338-47e1-9b70-52aa6f860303"/>
+				<imageExpression><![CDATA["Assinatura.png"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-18T07:49:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="licenca_arrematacao" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="Bundle" uuid="af269669-0174-4790-aa7a-78d78d182792">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="solaconnect"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="test"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Reports/licences/AutoridadesMuniProvConcern"/>
+	<property name="ireport.jasperserver.report.resource" value="/Reports/licences/AutoridadesMuniProvConcern_files/main_jrxml"/>
+	<parameter name="lang" class="java.lang.String">
+		<parameterDescription><![CDATA[Language code]]></parameterDescription>
+		<defaultValueExpression><![CDATA["en-us"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.String">
+		<parameterDescription><![CDATA[Claim id]]></parameterDescription>
+	</parameter>
+	<parameter name="imageUrl" class="java.lang.String">
+		<parameterDescription><![CDATA[URL of the service to generate map image]]></parameterDescription>
+	</parameter>
+	<parameter name="communityName" class="java.lang.String">
+		<parameterDescription><![CDATA[Community name]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Test"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT ON (CLAIM.ID)
+  claim.nr AS Process_Number,
+  claim.plot_number,
+  claim.description As Project_finale, 
+  claim.block_number,
+  claim.claim_area, 
+  claim.neighborhood, 
+  "north-adj.type".display_value As north_adj_type,
+  claim.north_adjacency, 
+  "south-adj.type".display_value As south_adj_type,
+  claim.south_adjacency, 
+  "east-adj.type".display_value AS east_adj_type,
+  claim.east_adjacency, 
+  "west-adj.type".display_value AS west_adj_type,
+  claim.west_adjacency, 
+  claim.has_constructions, 
+  claim.construction_date,
+  claim.issuance_date, 
+  claim.notes,  
+  claim_share.percentage, 
+  land_project.display_value AS project_name, 
+  land_use_type.display_value AS land_use, 
+  "terra-commune".display_value AS terra_commue, 
+  "terra-municipality".display_value AS terra_municipality, 
+  "terra-province".display_value As terra_province,
+  party.name AS party_name, 
+  party.other_name AS party_other_name, 
+  party.last_name AS party_last_name, 
+  party.birth_date,
+   "birth.commune".display_value AS birth_commune, 
+  "birth.municipality".display_value AS birth_municipality,
+  "birth.province".display_value AS birth_province,
+  "birth.country".display_value AS birth_country,   
+  gender_type.display_value AS party_gender, 
+  marital_status.display_value AS party_marital_status, 
+  party.address, 
+  "resident.commune".display_value AS resident_commune, 
+  "resident.municipality".display_value As resident_municipality, 
+  party.mobile_phone, 
+  party.phone, 
+  party.email, 
+  party.id_issuance_date, 
+  party.id_issuance_country, 
+  party.id_issuance_province, 
+  party.father_name, 
+  party.mother_name, 
+  party.beneficiary_name, 
+  party.beneficiary_id_number, 
+  id_type.display_value AS party_id_type,
+  party.id_number, 
+  party.id_issuance_municipality, 
+  party.id_issuance_commune 
+
+
+
+FROM 
+  opentenure.claim 
+  inner join opentenure.claim_share on claim.id = claim_share.claim_id
+  inner join opentenure.land_project on claim.land_project_code = land_project.code
+  inner join opentenure.party on claim.claimant_id = party.id
+  inner join party.gender_type on party.gender_code = gender_type.code 
+  inner join party.id_type on party.id_type_code = id_type.code 
+  inner join party.marital_status on party.marital_status_code = marital_status.code 
+  inner join cadastre.land_use_type on claim.land_use_code = land_use_type.code 
+  inner join address.commune "birth.commune"on party.birth_commune_code = "birth.commune".code
+  inner join address.municipality "birth.municipality" on "birth.commune".municipality_code = "birth.municipality".code
+  inner join address.province "birth.province" on "birth.municipality".province_code = "birth.province".code
+  inner join address.country "birth.country" on "birth.province".country_code = "birth.country".code       
+  inner join address.commune "resident.commune" on party.residence_commune_code = "resident.commune".code 
+  inner join address.municipality "resident.municipality" on "resident.commune".municipality_code = "resident.municipality".code 
+  inner join address.province "resident.province" on "resident.municipality".province_code = "resident.province".code
+  inner join address.commune "terra-commune" on claim.commune_code = "terra-commune".code 
+  inner join address.municipality "terra-municipality" on "terra-commune".municipality_code = "terra-municipality".code 
+  inner join address.province "terra-province" on "terra-municipality".province_code = "terra-province".code
+  inner join opentenure.adjacency_type "north-adj.type" on claim.north_adjacency_type = "north-adj.type".code
+  inner join opentenure.adjacency_type "south-adj.type" on claim.north_adjacency_type = "south-adj.type".code
+  inner join opentenure.adjacency_type "east-adj.type" on claim.north_adjacency_type = "east-adj.type".code
+  inner join opentenure.adjacency_type "west-adj.type" on claim.north_adjacency_type = "west-adj.type".code
+WHERE 
+claim.claimant_id = party.id
+
+]]>
+	</queryString>
+	<field name="process_number" class="java.lang.String"/>
+	<field name="plot_number" class="java.lang.String"/>
+	<field name="project_finale" class="java.lang.String"/>
+	<field name="block_number" class="java.lang.String"/>
+	<field name="claim_area" class="java.lang.Long"/>
+	<field name="neighborhood" class="java.lang.String"/>
+	<field name="north_adj_type" class="java.lang.String"/>
+	<field name="north_adjacency" class="java.lang.String"/>
+	<field name="south_adj_type" class="java.lang.String"/>
+	<field name="south_adjacency" class="java.lang.String"/>
+	<field name="east_adj_type" class="java.lang.String"/>
+	<field name="east_adjacency" class="java.lang.String"/>
+	<field name="west_adj_type" class="java.lang.String"/>
+	<field name="west_adjacency" class="java.lang.String"/>
+	<field name="has_constructions" class="java.lang.Boolean"/>
+	<field name="construction_date" class="java.sql.Date"/>
+	<field name="issuance_date" class="java.sql.Timestamp"/>
+	<field name="notes" class="java.lang.String"/>
+	<field name="percentage" class="java.lang.Double"/>
+	<field name="project_name" class="java.lang.String"/>
+	<field name="land_use" class="java.lang.String"/>
+	<field name="terra_commue" class="java.lang.String"/>
+	<field name="terra_municipality" class="java.lang.String"/>
+	<field name="terra_province" class="java.lang.String"/>
+	<field name="party_name" class="java.lang.String"/>
+	<field name="party_other_name" class="java.lang.String"/>
+	<field name="party_last_name" class="java.lang.String"/>
+	<field name="birth_date" class="java.sql.Date"/>
+	<field name="birth_commune" class="java.lang.String"/>
+	<field name="birth_municipality" class="java.lang.String"/>
+	<field name="birth_province" class="java.lang.String"/>
+	<field name="birth_country" class="java.lang.String"/>
+	<field name="party_gender" class="java.lang.String"/>
+	<field name="party_marital_status" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="resident_commune" class="java.lang.String"/>
+	<field name="resident_municipality" class="java.lang.String"/>
+	<field name="mobile_phone" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="id_issuance_date" class="java.sql.Date"/>
+	<field name="id_issuance_country" class="java.lang.String"/>
+	<field name="id_issuance_province" class="java.lang.String"/>
+	<field name="father_name" class="java.lang.String"/>
+	<field name="mother_name" class="java.lang.String"/>
+	<field name="beneficiary_name" class="java.lang.String"/>
+	<field name="beneficiary_id_number" class="java.lang.String"/>
+	<field name="party_id_type" class="java.lang.String"/>
+	<field name="id_number" class="java.lang.String"/>
+	<field name="id_issuance_municipality" class="java.lang.String"/>
+	<field name="id_issuance_commune" class="java.lang.String"/>
+	<background>
+		<band height="14" splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="666" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement mode="Transparent" x="242" y="-13" width="50" height="50" uuid="a7168ddd-f07b-422a-8122-40d7816caa79"/>
+				<imageExpression><![CDATA["sola_reports/AutoridadesMuniProvConcern/AngolaGvtLogo.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="10" y="157" width="520" height="1" uuid="c9cfcfa4-7614-4454-ac93-cc530fa93427"/>
+				<graphicElement>
+					<pen lineWidth="3.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="11" y="215" width="518" height="60" uuid="6ef512eb-5cce-4450-b6b9-fe0e45944386"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nome: "+"<b>"+$F{party_name}+" "+$F{party_other_name}+" "+$F{party_last_name} +"</b>"+", portador do BI N.º: "+"<b>"+ $F{id_number}+"</b>"+ ", processo N.º: "+"<b>"+$F{process_number}+"/"+YEAR(NOW())+"</b>"+"."+
+"<br>"+
+"Província do "+"<b>"+$F{terra_province}  +"</b>"+ ", Município: "+"<b>"+$F{terra_municipality} +"</b>"+", Comuna: "+"<b>"+$F{terra_commue} +"</b>"+ ", Zona/Bairro: "+"<b>"+ $F{neighborhood} +"</b>"+
+"<br>"+
+"Quarteirão N.º:"+"<b>"+$F{block_number} +"</b>"+", Talhão N.º: "+"<b>"+$F{plot_number} +"</b>"+ ",  Área: "+"<b>"+ $F{claim_area} +" m2"+"</b>"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="570" width="224" height="20" uuid="1fc3cedf-0a04-4779-bf3b-4920e35b49bf"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cambria" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[O Beneficiário]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="10" y="522" width="518" height="30" uuid="5caf76f5-ec32-45e4-ab8e-190b4ca3247f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{terra_municipality} +", aos "+ DAY(NOW( ))+" de "+ new java.text.SimpleDateFormat("MMMMMM",$P{REPORT_LOCALE}).format(NOW( ))+" de "+YEAR(NOW( ))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="175" width="410" height="30" uuid="9379eee5-55a3-4ced-8715-f7cf97001d77"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cambria" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LICENÇA DE ARREMATAÇÃO N .°:
+]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement x="322" y="175" width="207" height="30" uuid="9254a26a-ce3f-48fc-99ce-e07ef38325b7"/>
+				<textElement textAlignment="Left" markup="html">
+					<font fontName="Cambria" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>"+$F{process_number}+"/"+YEAR(NOW())+"</b>"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="10" y="47" width="520" height="103" uuid="abfbbad8-579e-411f-95fc-aff47074e382"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="Cambria" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["REPÚBLICA DE ANGOLA"+
+"<br>"+
+"GOVERNO DA PROVINCIA DO "+UPPER( $F{terra_province} )+
+"<br>"+
+"ADMINISTRAÇÃO DO MUNICÍPIO DO "+UPPER( $F{terra_municipality})+
+"<br>"+
+"REPARTIÇÃO MUNICIPAL DO ORDENAMENTO DO TERRITÓRIO, URBANISMO E AMBIENTE"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="11" y="632" width="224" height="30" uuid="b2efc5c2-d271-48ba-b603-1be62285aa0b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{party_name}+" " +$F{party_other_name}+" " +$F{party_last_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="304" y="632" width="224" height="30" uuid="41b7f611-073a-4ff2-8005-814fec2ac732"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Administrator Name"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="304" y="570" width="224" height="20" uuid="6f2134de-e49b-46a1-b13c-5d2c01a0672b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cambria" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[O(A) Administrador(a) Municipal ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="10" y="624" width="225" height="1" uuid="8eb03c9a-fd80-43b8-9566-20d0183016aa"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="304" y="623" width="225" height="1" uuid="b88a785d-a41b-4408-9784-ae8ab18ec0e2"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="11" y="285" width="518" height="200" uuid="5b783f82-d6de-4f02-b4bf-aff0a4eae881"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Prazo de aproveitamento útil e efectivo do terreno"+"<b> 3 (três) anos. </b>"+
+"<br>"+
+"<b>1</b>"+"- Nos termos da legislação e dos regulamentos em vigor na República de Angola, o(a) Sr(a): "+"<b>"+$F{party_name}+" "+$F{party_other_name}+" "+$F{party_last_name} + "</b>"+", compromete-se a não utilizar o terreno para fins diferentes dos constantes na autorização concedida pela Direcção Provincial do Ordenamento do Território, Urbanismo e Ambiente;"+
+"<br>"+
+"<b>2</b>"+"- Para efeitos da presente declaração, entende-se por fins diferentes, entre outros, a venda, a locação, e a doação do terreno;"+
+"<br>"+
+"<b>3</b>"+"- O não cumprimenta do constante no número um da presente declaração implicará automaticamente a extinção ou caducidade da licença e consequentemente a perda dos direitos e bens existentes na parcela a favor do Estado;"+
+"<br>"+
+"<b>4</b>"+"- Compromete-se igualmente a cumprir com as normas Técnicas constantes no projecto aprovado, bem como com os regulamentos relativos as edificações Urbanas;"+
+"<br>"+
+"<b>5</b>"+"- O terreno concedido destina-se a construção de um(a) "+"<b>"+$F{project_finale} +"</b>"+" de carácter definitivo."+
+"<br>"+
+"<b>6</b>"+"- A presente Declaração é intransmissível."]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

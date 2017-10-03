@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-09-12T13:45:35 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Shares" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="Bundle" uuid="de938806-95a0-47e1-a67f-d0883e81c25e">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.reportUnit" value="/Workflow/Shares"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="claim_id" class="java.lang.String"/>
+	<parameter name="lang" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT sh.id as share_id, sh.nominator, sh.denominator, sh.percentage, p.name, p.last_name, 
+get_translation(idt.display_value, 'en') as id_type_name, p.id_number, p.birth_date, get_translation(gt.display_value, 'en') as gender_name,
+p.mobile_phone, p.phone, p.email, p.address, p.is_person, p.birth_country_code, p.marital_status_code, p.birth_commune_code, 
+p.id_issuance_country, p.id_issuance_province, p.id_issuance_commune,
+pms.display_value as marital_status, 
+p.beneficiary_name,
+p.beneficiary_id_number,
+mu.display_value||'/'||pr.display_value as naturalitade,
+c.display_value nacionalidade,
+com.display_value commune
+FROM opentenure.claim_share sh 
+ LEFT JOIN (opentenure.party_for_claim_share psh 
+   INNER JOIN ((((((((opentenure.party p
+     LEFT JOIN party.id_type idt 
+     ON p.id_type_code = idt.code)
+     LEFT JOIN party.gender_type gt
+     ON p.gender_code = gt.code) 
+     LEFT JOIN party.marital_status pms
+     ON p.marital_status_code = pms.code) 
+
+LEFT JOIN address.commune com ON com.code = p.residence_commune_code)
+    LEFT JOIN address.municipality mu ON com.municipality_code = mu.code)
+    LEFT JOIN address.province pr ON mu.province_code = pr.code)
+    LEFT JOIN address.country c ON p.birth_country_code = c.code)
+    LEFT JOIN address.commune com2 ON com2.code = p.id_issuance_commune) 
+   ON psh.party_id = p.id) 
+ ON sh.id = psh.claim_share_id
+WHERE  (sh.status = 'a' or sh.status is null) and sh.claim_id = $P{claim_id}]]>
+	</queryString>
+	<field name="share_id" class="java.lang.String"/>
+	<field name="nominator" class="java.lang.Integer"/>
+	<field name="denominator" class="java.lang.Integer"/>
+	<field name="percentage" class="java.lang.Double"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="last_name" class="java.lang.String"/>
+	<field name="id_type_name" class="java.lang.String"/>
+	<field name="id_number" class="java.lang.String"/>
+	<field name="birth_date" class="java.sql.Date"/>
+	<field name="gender_name" class="java.lang.String"/>
+	<field name="mobile_phone" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="is_person" class="java.lang.Boolean"/>
+	<field name="beneficiary_name" class="java.lang.String"/>
+	<field name="beneficiary_id_number" class="java.lang.String"/>
+	<field name="naturalitade" class="java.lang.String"/>
+	<field name="nacionalidade" class="java.lang.String"/>
+	<field name="commune" class="java.lang.String"/>
+	<field name="marital_status" class="java.lang.String"/>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{share_id}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="535" height="20" backcolor="#D9D9D9" uuid="04c2bc83-72a1-4dfc-8aec-a0d02f51ec6c"/>
+					<box leftPadding="5">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+						<paragraph lineSpacingSize="0.0" leftIndent="0"/>
+					</textElement>
+					<text><![CDATA[03 – O Concessionário]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="160" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="533" height="20" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="af00ef8c-3086-4a87-9907-2c2e2e290885">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="20" width="533" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="3f40b800-12b6-4e0c-a05a-6b9061989f70">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name} + ($F{last_name} == null ? "" : " " + $F{last_name})]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="40" width="533" height="120" isPrintWhenDetailOverflows="true" uuid="bf6503fd-5e9d-4d7b-b0ad-5282a216c182">
+					<property name="ShowOutOfBoundContent" value="false"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[!($F{is_person})]]></printWhenExpression>
+				</reportElement>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="62" width="533" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="9ab49943-8f42-4c18-8d0a-eb25fe06c447">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name} + ($F{last_name} == null ? "" : " " + $F{last_name})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="42" width="533" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="c0a2921e-7811-46a2-b0ab-0e006045b5f5">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Representante Legal do Concessionado ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="102" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="3282017f-2cf8-4854-bbac-63981413d4ac">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{naturalitade} == null ? "" : $F{naturalitade})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="MMMM d, yyyy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="101" y="102" width="89" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="4332cf33-3273-48a1-a599-874280cecbb4">
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{marital_status} == null ? "" : $F{marital_status})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="MMMM d, yyyy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="191" y="102" width="83" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="80f0461f-e5ae-448b-aa26-6ee2658f5ba3">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{nacionalidade} == null ? "" : $F{nacionalidade})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="MMMM d, yyyy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="274" y="102" width="167" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ece255f3-db0d-416b-8a15-e148a22c55d7">
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{id_type_name} == null ? "" : $F{id_type_name}) + ($F{id_number} == null ? "" : " #" + $F{id_number})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="82" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="9dd4bb7f-efa0-4505-958d-2f1af18c1aba">
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Naturalidade]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="101" y="82" width="89" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="0ede47f7-0a0c-4397-973a-b148647384da">
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Estado civil]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="191" y="82" width="83" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="01fdb191-fa8a-423a-beaf-48cfb83f640d">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Nacionalidade]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="274" y="82" width="167" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="0b6ecdec-05d5-4ee5-aa63-2f4ffc222d18">
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[B.I n.º/Cartão de Residente   ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="09d3e957-0861-431d-8eae-7ec8d7463aee">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Sede]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="0" width="167" height="20" isRemoveLineWhenBlank="true" backcolor="#FFFFFF" uuid="fac71597-249d-4f5a-bb36-dcd53e35930f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Registado na Conservatória Comercial Sob N.º]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="MMMM d, yyyy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="100" y="22" width="167" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="774a3b2d-a1b8-4eb1-8d1a-e9eb37388075">
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{id_type_name} == null ? "" : $F{id_type_name}) + ($F{id_number} == null ? "" : " #" + $F{id_number})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="22" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ff7b3e55-30c1-4e44-bb06-7d5d993ae0c5">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[!$F{is_person}]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{commune} == null ? "" : $F{commune})]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>
